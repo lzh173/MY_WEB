@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易聊天室</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-break: break-word;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.incoming {
+            background-color: #e8ebf0;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+        }
+
+        .message.outgoing {
+            background-color: #6e8efb;
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
+            .chat-input input {
+                flex: 1;
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                outline: none;
+                font-size: 1rem;
+            }
+
+            .chat-input button {
+                margin-left: 10px;
+                padding: 12px 20px;
+                background-color: #6e8efb;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .chat-input button:hover {
+                    background-color: #5a7df9;
+                }
+
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .login-container h2 {
+                margin-bottom: 20px;
+                color: #6e8efb;
+            }
+
+            .login-container input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1rem;
+            }
+
+            .login-container button {
+                width: 100%;
+                padding: 12px;
+                background-color: #6e8efb;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                margin-top: 10px;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #6e8efb;
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .online-count {
+            background-color: #f0f4ff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #6e8efb;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .chat-container {
+                height: 80vh;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-comments"></i> 简易聊天室</h1>
+            <p>基于PHP和JSON的轻量级聊天解决方案</p>
+        </header>
+
+        <div id="login-section">
+            <div class="login-container">
+                <h2>登录聊天室</h2>
+                <div id="login-error" class="error" style="display: none;"></div>
+                <input type="text" id="username" placeholder="用户名" required>
+                <input type="password" id="password" placeholder="密码" required>
+                <button id="login-btn">登录</button>
+                <p style="margin-top: 15px; color: #777;">
+                    没有账号？输入的用户名和密码将自动注册
+                </p>
+            </div>
+        </div>
+
+        <div id="chat-section" style="display: none;">
+            <div class="user-info">
+                <span>欢迎, <span id="current-user"></span></span>
+                <div class="online-count">
+                    <i class="fas fa-users"></i> <span id="online-count">0</span> 人在线
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="loading" id="loading-messages">
+                        <i class="fas fa-spinner fa-spin"></i> 加载中...
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="输入消息...">
+                    <button id="send-btn">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentUser = null;
+        let lastMessageId = 0;
+        let messageCheckInterval = null;
+
+        // DOM元素
+        const loginSection = document.getElementById('login-section');
+        const chatSection = document.getElementById('chat-section');
+        const loginBtn = document.getElementById('login-btn');
+        const sendBtn = document.getElementById('send-btn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const messageInput = document.getElementById('message-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const loadingMessages = document.getElementById('loading-messages');
+        const loginError = document.getElementById('login-error');
+        const currentUserSpan = document.getElementById('current-user');
+        const onlineCountSpan = document.getElementById('online-count');
+
+        // 登录事件
+        loginBtn.addEventListener('click', login);
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // 登录函数
+        async function login() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showError(loginError, '用户名和密码不能为空');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                formData.append('action', 'login');
+
+                const response = await fetch('chat_api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('登录请求失败');
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentUser = username;
+                    currentUserSpan.textContent = username;
+                    loginSection.style.display = 'none';
+                    chatSection.style.display = 'block';
+                    loadMessages();
+                    startMessageChecker();
+                    updateOnlineCount();
+                } else {
+                    showError(loginError, result.message || '登录失败');
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                showError(loginError, '登录失败，请检查网络连接');
+            }
+        }
+
+        // 发送消息
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('username', currentUser);
+                formData.append('message', message);
+                formData.append('action', 'send');
+
+                const response = await fetch('chat_api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('发送消息失败');
+
+                const result = await response.json();
+
+                if (result.success) {
+                    messageInput.value = '';
+                    // 不需要手动添加消息，轮询会获取到新消息
+                } else {
+                    alert('发送失败: ' + (result.message || '未知错误'));
+                }
+            } catch (error) {
+                console.error('发送错误:', error);
+                alert('消息发送失败，请检查网络连接');
+            }
+        }
+
+        // 加载消息
+        async function loadMessages() {
+            try {
+                const response = await fetch(`chat_api.php?action=get&last_id=${lastMessageId}`);
+                if (!response.ok) throw new Error('获取消息失败');
+
+                const messages = await response.json();
+
+                if (messages.length > 0) {
+                    loadingMessages.style.display = 'none';
+
+                    messages.forEach(msg => {
+                        addMessageToChat(msg);
+                        lastMessageId = Math.max(lastMessageId, msg.id);
+                    });
+                }
+            } catch (error) {
+                console.error('加载消息错误:', error);
+                loadingMessages.innerHTML = '<div class="error">加载消息失败</div>';
+            }
+        }
+
+        // 添加消息到聊天界面
+        function addMessageToChat(msg) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.username === currentUser ? 'outgoing' : 'incoming'}`;
+
+            messageDiv.innerHTML = `
+                    <div class="message-text">${msg.message}</div>
+                    <div class="message-info">
+                        <span>${msg.username}</span>
+                        <span>${formatTime(msg.time)}</span>
+                    </div>
+                `;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 格式化时间
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000 / 60); // 分钟差
+
+            if (diff < 1) return '刚刚';
+            if (diff < 60) return `${diff}分钟前`;
+            if (diff < 1440) return `${Math.floor(diff / 60)}小时前`;
+            return `${Math.floor(diff / 1440)}天前`;
+        }
+
+        // 启动消息检查器
+        function startMessageChecker() {
+            messageCheckInterval = setInterval(() => {
+                loadMessages();
+                updateOnlineCount();
+            }, 3000); // 每3秒检查一次新消息
+        }
+
+        // 更新在线人数
+        async function updateOnlineCount() {
+            try {
+                const response = await fetch('chat_api.php?action=online_count');
+                if (!response.ok) throw new Error('获取在线人数失败');
+
+                const result = await response.json();
+                onlineCountSpan.textContent = result.count || 0;
+            } catch (error) {
+                console.error('更新在线人数错误:', error);
+            }
+        }
+
+        // 显示错误信息
+        function showError(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        // 页面关闭时通知服务器
+        window.addEventListener('beforeunload', async () => {
+            if (!currentUser) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('username', currentUser);
+                formData.append('action', 'logout');
+
+                // 使用navigator.sendBeacon确保请求在页面卸载时也能发送
+                navigator.sendBeacon('chat_api.php', formData);
+            } catch (error) {
+                console.error('登出错误:', error);
+            }
+        });
+    </script>
+</body>
+</html>

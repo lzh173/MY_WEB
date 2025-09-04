@@ -1,42 +1,689 @@
 <!DOCTYPE html>
-<html> 
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="generator" content="RocketCake">
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="css/index_html.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOAA卫星退役纪念站 - 向太空哨兵致敬</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #0a192f 0%, #0d233d 100%);
+            color: #e6f1ff;
+            overflow-x: hidden;
+        }
+
+        .stars-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        header {
+            background: rgba(2, 12, 27, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+            header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, #64ffda, #00a3e0, #64ffda);
+            }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #64ffda, #00a3e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            color: #a8b2d1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin: 2rem 0;
+            background: rgba(23, 42, 69, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+            .intro h2 {
+                font-size: 2.2rem;
+                margin-bottom: 1.5rem;
+                color: #64ffda;
+            }
+
+            .intro p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: #ccd6f6;
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+        .highlight {
+            color: #64ffda;
+            font-weight: bold;
+        }
+
+        .gallery-section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #64ffda;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+            .section-title::after {
+                content: '';
+                display: block;
+                width: 70px;
+                height: 3px;
+                background: linear-gradient(90deg, #64ffda, #00a3e0);
+                margin: 10px auto;
+            }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 250px;
+            background: #0a192f;
+        }
+
+            .gallery-item:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(100, 255, 218, 0.3);
+            }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 25, 47, 0.9);
+            color: #64ffda;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        .timeline {
+            margin: 5rem 0;
+            position: relative;
+        }
+
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 100%;
+                background: linear-gradient(to bottom, #64ffda, #00a3e0, #64ffda);
+                border-radius: 2px;
+            }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 30px;
+            position: relative;
+            margin-bottom: 60px;
+            width: 50%;
+        }
+
+            .timeline-item:nth-child(even) {
+                align-self: flex-end;
+                justify-content: flex-start;
+                padding-left: 30px;
+                padding-right: 0;
+                left: 50%;
+            }
+
+        .timeline-content {
+            background: rgba(23, 42, 69, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            width: 100%;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            text-align: left;
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: #64ffda;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+            .timeline-year i {
+                margin-right: 10px;
+            }
+
+        .timeline-desc {
+            color: #ccd6f6;
+            line-height: 1.6;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #64ffda;
+            border-radius: 50%;
+            top: 20px;
+            right: -10px;
+            box-shadow: 0 0 0 4px rgba(100, 255, 218, 0.2), 0 0 10px #64ffda;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+            right: auto;
+        }
+
+        .footer {
+            background: rgba(2, 12, 27, 0.9);
+            padding: 3rem 0 1.5rem;
+            text-align: center;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer p {
+            color: #a8b2d1;
+            margin: 5px 0;
+        }
+
+        .footer a {
+            color: #64ffda;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .footer a:hover {
+                color: #00a3e0;
+                text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+            }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+            }
+
+                .timeline-item:nth-child(even) {
+                    left: 0;
+                    padding-left: 70px;
+                }
+
+                .timeline-item::after {
+                    left: 20px;
+                    right: auto;
+                }
+
+                .timeline-item:nth-child(even)::after {
+                    left: 20px;
+                }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        .special-event {
+            background: rgba(100, 255, 218, 0.1) !important;
+            border: 1px solid #64ffda !important;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.2) !important;
+        }
+
+            .special-event .timeline-year {
+                color: #ff6b6b;
+            }
+
+        .countdown {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem 0;
+            background: rgba(23, 42, 69, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .countdown-title {
+            font-size: 1.5rem;
+            color: #64ffda;
+            margin-bottom: 1rem;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 2rem;
+            color: #ccd6f6;
+        }
+
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+            padding: 10px;
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 10px;
+        }
+
+        .countdown-value {
+            font-weight: bold;
+            font-size: 2.5rem;
+            color: #64ffda;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #a8b2d1;
+        }
+        .incense-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #64ffda, #00a3e0);
+            color: #0a192f;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+            .incense-link:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(100, 255, 218, 0.4);
+                color: #0a192f;
+            }
+
+            .incense-link i {
+                margin-right: 8px;
+            }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .incense-link {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="textstyle1">
-<div id="container_e4bf9ac"><div id="container_e4bf9ac_padding" ><div class="textstyle2"><h1 id="heading_49364a9">&#29282;&#22823;&#65292;&#25105;&#24819;&#20320;&#20102;&#65281;</h1></div>
-<div style="clear:both"></div></div></div><div id="container_ade6698"><div id="container_ade6698_padding" ><div class="textstyle2">  <a href="a.html" onclick="getLocation() style="text-decoration:none"><div id="button_7d1752af">
-    <div class="vcenterstyle1"><div class="vcenterstyle2">      <div class="textstyle2">
-        <span class="textstyle3">&#24050;&#28385;114514&#23681;&#28857;&#27492;&#36827;&#20837;&#32593;&#31449;</span>
-		
-        </div>
-      <div class="textstyle1">
-        </div>
-      </div></div>
-    </div></a>
-	<script>
-	var x=document.getElementById("demo");
-	function getLocation()
-	  {
-	  if (navigator.geolocation)
-	    {
-	    navigator.geolocation.getCurrentPosition(showPosition);
-	    }
-	  else{x.innerHTML="Geolocation is not supported by this browser.";}
-	  }
-	function showPosition(position)
-	  {
-	  x.innerHTML="Latitude: " + position.coords.latitude + 
-	  "<br />Longitude: " + position.coords.longitude;	
-	  }
-	</script>
-</div>
+    <!-- 星空背景 -->
+    <div class="stars-background" id="stars"></div>
 
-<div style="clear:both"></div></div></div>  </div>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-satellite"></i> NOAA卫星退役纪念站</h1>
+            <p class="header-subtitle">致敬这些守护地球的"太空哨兵" - 感谢你们数十年的卓越服务</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h2><i class="fas fa-heart"></i> 感谢NOAA卫星的卓越贡献</h2>
+            <p>在NOAA极轨卫星（如<span class="highlight">NOAA-15/18/19</span>）陆续退役的今天，它们的<span class="highlight">APT（自动图像传输）系统</span>依然是业余无线电和气象爱好者心中不可替代的经典。这些卫星在<span class="highlight">137MHz频段</span>下传的模拟信号，曾以极低的接收门槛（仅需RTL-SDR和简单天线）让全球无数普通人首次触摸到来自太空的第一手原始气象数据。</p>
+            <p>尽管新一代卫星（如JPSS系列）已转向高分辨率数字传输，但退役NOAA卫星的APT信号因其独特的亲和力仍在被追忆，它们开启了公民气象观测的新时代。</p>
+            <a href="Cyber_incense.html" class="incense-link">
+                <i class="fas fa-fire"></i> 进入赛博上香页面
+            </a>
+        </section>
+
+        <section class="gallery-section">
+            <h2 class="section-title">NOAA卫星影像画廊</h2>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="i/a.png" alt="NOAA卫星" class="gallery-img">
+                    <div class="gallery-caption">NOAA卫星在轨运行示意图</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="i/b.png" alt="NOAA19hrpt的avhrr/3" class="gallery-img">
+                    <div class="gallery-caption">NOAA-19 HRPT的AVHRR/3影像</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="i/c.png" alt="noaa15的apt，拍到了台风" class="gallery-img">
+                    <div class="gallery-caption">NOAA-15 APT拍摄的台风影像</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="i/d.png" alt="hrpt" class="gallery-img">
+                    <div class="gallery-caption">高分辨率图像传输(HRPT)示例</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="i/e.png" alt="e" class="gallery-img">
+                    <div class="gallery-caption">NOAA-15仅剩可见光传感器时拍摄的中国大地</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="i/f.png" alt="s" class="gallery-img">
+                    <div class="gallery-caption">NOAA-15切换传感器的图像（左边上半部分为红外，下半部分为可见光）</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="countdown">
+            <div class="countdown-title">NOAA-15 退役倒计时</div>
+            <div class="countdown-timer">
+                <div class="countdown-unit">
+                    <span class="countdown-value" id="days">00</span>
+                    <span class="countdown-label">天</span>
+                </div>
+                <div class="countdown-unit">
+                    <span class="countdown-value" id="hours">00</span>
+                    <span class="countdown-label">时</span>
+                </div>
+                <div class="countdown-unit">
+                    <span class="countdown-value" id="minutes">00</span>
+                    <span class="countdown-label">分</span>
+                </div>
+                <div class="countdown-unit">
+                    <span class="countdown-value" id="seconds">00</span>
+                    <span class="countdown-label">秒</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="timeline">
+            <h2 class="section-title">NOAA卫星退役时间线</h2>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年5月31日</div>
+                    <div class="timeline-desc">NOAA-18 STX-4 S波段下行链路发射机出现异常，导致图像质量下降和数据丢失。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年6月16日</div>
+                    <div class="timeline-desc">向用户发出了暂停POES数据的30天提醒。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年6月16日</div>
+                    <div class="timeline-desc">向用户发出暂停POES数据（NOAA-15和NOAA-19）的3天提醒。NOAA-18由于S波段发射机损坏，于2025年6月6日1740 UTC退役。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年6月16日 1800 UTC</div>
+                    <div class="timeline-desc">NOAA暂停向用户提供POES数据（NOAA-15和NOAA-19）。NOAA-15和NOAA-19将开始生命周期终止（EOL）测试活动。从生产分发和访问（PDA）交付的运营产品现已暂停。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年8月6日</div>
+                    <div class="timeline-desc">NOAA已完成NOAA-15和NOAA-19的报废（EOL）测试活动，并将很快开始退役过程。剩余的两颗卫星远远超出了它们的设计寿命。<br>卫星已进入"暮光阶段"，故障可能性越来越大。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年8月#8</div>
+                    <div class="timeline-desc">这是NOAA-15计划于2025年8月12日1506至1520 UTC退役的最后提醒。NOAA-19将于一周后的2025年8月19日发布。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年8月11日</div>
+                    <div class="timeline-desc">NOAA-19突发问题（疑似电池损坏），导致APT与HRPT损坏，仅剩DSB。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年8月#9</div>
+                    <div class="timeline-desc">由于NOAA-19异常，NOAA-15退役被推迟到8月18日这一周，确切的日期待定。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025年8月#11</div>
+                    <div class="timeline-desc">NOAA发出了NOAA-15计划于2025年8月19日1522至1537 UTC退役的最后提醒。</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content special-event">
+                    <div class="timeline-year"><i class="fas fa-skull"></i> 2025年8月BTC 23:27:12</div>
+                    <div class="timeline-desc">
+                        NOAA-15被NOAA官方通过指令关闭。一个时代的终结！<br>
+                        <img src="i/n15f.jpg" alt="NOAA-15关闭瞬间" style="max-width: 100%; margin-top: 15px; border-radius: 5px; border: 1px solid #64ffda;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2025 NOAA卫星纪念项目 | 数据来源: 追风留星计划小组</p>
+                <p>🛰 纪念那些为我们守护地球的太空哨兵</p>
+
+                <div class="footer-links">
+                    <a href="mailto:admin@lzh173.chat"><i class="fas fa-envelope"></i> 电子邮箱</a>
+                    <a href="RA/index.html"><i class="fas fa-link"></i> 友情链接-业余无线电档案馆</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 150;
+
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+
+                star.style.animationDelay = `${Math.random() * 5}s`;
+
+                starsContainer.appendChild(star)
+            }
+        }
+
+        // 倒计时功能
+        function updateCountdown() {
+            const targetDate = new Date('2025-08-19T15:22:00Z').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // 添加滚动动画
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.timeline-content, .gallery-item').forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(item);
+            });
+        });
+    </script>
 </body>
 </html>

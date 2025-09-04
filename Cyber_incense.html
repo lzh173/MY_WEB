@@ -1,0 +1,558 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOAA POES 卫星赛博上香</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a192f 0%, #1a2f4f 100%);
+            color: #e6f1ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(90deg, #64ffda, #00a3e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .subtitle {
+            color: #a8b2d1;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(23, 42, 69, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #64ffda;
+            text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #a8b2d1;
+            font-size: 0.9rem;
+        }
+
+        .incense-counter {
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            border: 1px solid #64ffda;
+        }
+
+        .counter-number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #64ffda;
+            text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+            margin: 1rem 0;
+        }
+
+        .incense-button {
+            background: linear-gradient(90deg, #64ffda, #00a3e0);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #0a192f;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+        }
+
+            .incense-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(100, 255, 218, 0.3);
+            }
+
+            .incense-button:active {
+                transform: translateY(0);
+            }
+
+        .message-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            margin: 1rem 0;
+            border: 1px solid #64ffda;
+            border-radius: 8px;
+            background: rgba(10, 25, 47, 0.6);
+            color: #e6f1ff;
+            font-size: 1rem;
+        }
+
+        .recent-tributes {
+            margin: 2rem 0;
+            background: rgba(23, 42, 69, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .tribute-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .tribute-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .tribute-item:last-child {
+                border-bottom: none;
+            }
+
+        .tribute-message {
+            flex: 1;
+            text-align: left;
+        }
+
+        .tribute-time {
+            color: #a8b2d1;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            color: #a8b2d1;
+            border-top: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .loading {
+            color: #64ffda;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 5px;
+            border: 1px solid #ff6b6b;
+        }
+
+        .incense-animation {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            animation: rise 4s forwards;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .counter-number {
+                font-size: 3rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tribute-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tribute-time {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-satellite"></i> NOAA POES 卫星赛博上香</h1>
+            <p class="subtitle"></p>
+            <p>🛰️ 向为人类气象观测奉献一生的太空哨兵致敬 🛰️</p>
+        </header>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="total-tributes">0</div>
+                <div class="stat-label">总上香次数</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" id="today-tributes">0</div>
+                <div class="stat-label">今日上香</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" id="unique-users">0</div>
+                <div class="stat-label">独立访客</div>
+            </div>
+        </div>
+
+        <div class="incense-counter">
+            <h2><i class="fas fa-heart"></i> 赛博上香致敬</h2>
+            <p>您的致敬将保存到服务器</p>
+
+            <div class="counter-number" id="incense-count">0</div>
+            <p>位同好已上香致敬</p>
+
+            <input type="text" class="message-input" id="tribute-message" placeholder="留下您的致敬留言 (可选)" maxlength="100">
+
+            <button class="incense-button" id="incense-btn">
+                <i class="fas fa-fire"></i> 点上永恒之香
+            </button>
+
+            <div id="error-message" class="error-message" style="display: none;"></div>
+
+            <p style="color: #a8b2d1; font-size: 0.9rem; margin-top: 1rem;">
+                
+            </p>
+        </div>
+
+        <div class="recent-tributes">
+            <h3><i class="fas fa-history"></i> 最近致敬记录</h3>
+            <div class="loading" id="loading-tributes">
+                <i class="fas fa-spinner fa-spin"></i> 加载中...
+            </div>
+            <ul class="tribute-list" id="tribute-list" style="display: none;">
+                <!-- 动态加载致敬记录 -->
+            </ul>
+        </div>
+
+        <footer>
+            <p>© 2025 NOAA POES 卫星纪念项目 | 追风留星计划小组</p>
+
+        </footer>
+    </div>
+
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 200;
+
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+
+                star.style.animationDelay = `${Math.random() * 5}s`;
+
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 从服务器获取统计数据
+        async function loadStats() {
+            try {
+                const response = await fetch('get_stats.php');
+                if (!response.ok) throw new Error('网络响应不正常');
+
+                const stats = await response.json();
+
+                document.getElementById('incense-count').textContent = stats.totalCount.toLocaleString();
+                document.getElementById('total-tributes').textContent = stats.totalCount.toLocaleString();
+                document.getElementById('today-tributes').textContent = stats.todayCount.toLocaleString();
+                document.getElementById('unique-users').textContent = stats.uniqueUsers.toLocaleString();
+
+            } catch (error) {
+                console.error('加载统计数据失败:', error);
+                showError('无法加载统计数据，请检查PHP服务是否正常运行');
+            }
+        }
+
+        // 从服务器获取最近记录
+        // 从服务器获取最近记录
+        async function loadRecentTributes() {
+            try {
+                const response = await fetch('get_recent.php');
+                if (!response.ok) throw new Error('网络响应不正常');
+
+                const tributes = await response.json();
+                const tributeList = document.getElementById('tribute-list');
+                const loadingElement = document.getElementById('loading-tributes');
+
+                // 确保tributes是数组
+                if (!Array.isArray(tributes)) {
+                    throw new Error('返回的数据格式不正确');
+                }
+
+                if (tributes.length === 0) {
+                    tributeList.innerHTML = '<li class="tribute-item"><span class="tribute-message">暂无致敬记录</span></li>';
+                } else {
+                    tributeList.innerHTML = '';
+                    tributes.forEach(tribute => {
+                        const li = document.createElement('li');
+                        li.className = 'tribute-item';
+
+                        // 处理北京时间字符串 (格式: "YYYY-MM-DD HH:MM:SS")
+                        let tributeTime;
+                        if (tribute.time && typeof tribute.time === 'string') {
+                            // 将北京时间字符串转换为本地时间对象
+                            const timeStr = tribute.time.replace(' ', 'T') + '+08:00';
+                            tributeTime = new Date(timeStr);
+                        } else {
+                            tributeTime = new Date();
+                        }
+
+                        // 如果日期无效，使用当前时间
+                        if (isNaN(tributeTime.getTime())) {
+                            tributeTime = new Date();
+                        }
+
+                        const now = new Date();
+                        const timeDiff = Math.floor((now - tributeTime) / 1000 / 60); // 分钟差
+
+                        let timeText;
+                        if (timeDiff < 1) timeText = '刚刚';
+                        else if (timeDiff < 60) timeText = `${timeDiff}分钟前`;
+                        else if (timeDiff < 1440) timeText = `${Math.floor(timeDiff / 60)}小时前`;
+                        else timeText = `${Math.floor(timeDiff / 1440)}天前`;
+
+                        li.innerHTML = `
+                    <span class="tribute-message">${tribute.message || '致敬太空哨兵'}</span>
+                    <span class="tribute-time">${timeText}</span>
+                `;
+                        tributeList.appendChild(li);
+                    });
+                }
+
+                loadingElement.style.display = 'none';
+                tributeList.style.display = 'block';
+
+            } catch (error) {
+                console.error('加载最近记录失败:', error);
+                document.getElementById('loading-tributes').innerHTML = '<i class="fas fa-exclamation-triangle"></i> 加载失败';
+            }
+        }
+
+        // 创建上香动画
+        function createIncenseAnimation() {
+            const incense = document.createElement('div');
+            incense.className = 'incense-animation';
+            incense.innerHTML = '🛰️';
+            incense.style.left = `${Math.random() * 70 + 15}%`;
+            incense.style.fontSize = `${Math.random() * 20 + 20}px`;
+
+            document.body.appendChild(incense);
+
+            setTimeout(() => {
+                incense.remove();
+            }, 4000);
+        }
+
+        // 获取用户唯一标识
+        function getUserId() {
+            let userId = localStorage.getItem('noaaUserId');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('noaaUserId', userId);
+            }
+            return userId;
+        }
+
+        // 上香按钮点击事件
+        document.getElementById('incense-btn').addEventListener('click', async function () {
+            const userId = getUserId();
+            const message = document.getElementById('tribute-message').value.trim() || '致敬太空哨兵';
+
+            const button = this;
+            const originalText = button.innerHTML;
+
+            // 禁用按钮防止重复点击
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+            button.disabled = true;
+
+            try {
+                // 发送数据到PHP后端
+                const response = await fetch('save_tribute.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        message: message
+                    })
+                });
+
+                if (!response.ok) throw new Error('网络响应不正常');
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 更新显示
+                    await loadStats();
+                    await loadRecentTributes();
+
+                    // 创建动画
+                    createIncenseAnimation();
+
+                    // 清空输入框
+                    document.getElementById('tribute-message').value = '';
+
+                    // 成功反馈
+                    button.innerHTML = '<i class="fas fa-check"></i> 提交成功';
+                    button.style.background = 'linear-gradient(90deg, #4caf50, #8bc34a)';
+
+                } else {
+                    throw new Error(result.message || '提交失败');
+                }
+
+            } catch (error) {
+                console.error('提交失败:', error);
+                showError('提交失败: ' + error.message);
+                button.innerHTML = '<i class="fas fa-times"></i> 提交失败';
+                button.style.background = 'linear-gradient(90deg, #ff6b6b, #ff9e6b)';
+            }
+
+            // 恢复按钮状态
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(90deg, #64ffda, #00a3e0)';
+                button.disabled = false;
+            }, 2000);
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            createStars();
+            loadStats();
+            loadRecentTributes();
+
+            // 添加键盘支持
+            document.getElementById('tribute-message').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('incense-btn').click();
+                }
+            });
+
+            // 每分钟自动更新数据
+            setInterval(() => {
+                loadStats();
+                loadRecentTributes();
+            }, 60000);
+        });
+    </script>
+</body>
+</html>
