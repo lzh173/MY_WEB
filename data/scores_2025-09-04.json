@@ -1,0 +1,365 @@
+{
+    "timestamp": "2025-09-04 13:43:36",
+    "students": [
+        {
+            "group": 1,
+            "id": 5,
+            "name": "邓俊杰",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 1,
+            "id": 12,
+            "name": "陆启铭",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 1,
+            "id": 35,
+            "name": "黎钧浠",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 1,
+            "id": 31,
+            "name": "方晓彤",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 1,
+            "id": 8,
+            "name": "黎俊僖",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 1,
+            "id": 36,
+            "name": "罗毓贝",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 4,
+            "name": "邓焯曦",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 17,
+            "name": "潘嘉谦",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 11,
+            "name": "刘浩文",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 47,
+            "name": "张逸嫣",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 7,
+            "name": "关钧与",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 2,
+            "id": 2,
+            "name": "陈家福",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 16,
+            "name": "马浩钒",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 33,
+            "name": "侯羽璇",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 13,
+            "name": "陆子文",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 9,
+            "name": "李奕鸿",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 26,
+            "name": "杨睿泓",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 3,
+            "id": 30,
+            "name": "陈梓渝",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 49,
+            "name": "周欣愉",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 34,
+            "name": "黎霏",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 29,
+            "name": "蔡昕沄",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 32,
+            "name": "关乐彤",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 44,
+            "name": "许瑞欣",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 4,
+            "id": 20,
+            "name": "司徒仲言",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 38,
+            "name": "阮惠盈",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 23,
+            "name": "佟尔悦",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 24,
+            "name": "王遂立",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 45,
+            "name": "杨善甜",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 39,
+            "name": "沈懿敏",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 5,
+            "id": 1,
+            "name": "毕隽熙",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 41,
+            "name": "谢卓霖",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 3,
+            "name": "陈昱朗",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 28,
+            "name": "张杰齐",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 14,
+            "name": "罗崇峻",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 42,
+            "name": "谢姕澄",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 21,
+            "name": "孙逸凡",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 6,
+            "id": 18,
+            "name": "秦柏霖",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 27,
+            "name": "张汉典",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 10,
+            "name": "林哲瀚",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 40,
+            "name": "肖咏诗",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 48,
+            "name": "钟悦乔",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 50,
+            "name": "朱琳晞",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 7,
+            "id": 22,
+            "name": "佟尔颜",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 37,
+            "name": "潘思韵",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 19,
+            "name": "邵烨俊",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 46,
+            "name": "杨子昕",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 6,
+            "name": "高朗轩",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 43,
+            "name": "徐博斯",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 15,
+            "name": "罗迪轩",
+            "points": 0,
+            "notes": []
+        },
+        {
+            "group": 8,
+            "id": 25,
+            "name": "徐浩尧",
+            "points": 0,
+            "notes": []
+        }
+    ],
+    "groupScores": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+    }
+}

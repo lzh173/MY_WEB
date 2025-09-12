@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级积分系统</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #4834d4;
+            --primary-light: #a29bfe;
+            --secondary: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --background: #f5f7fa;
+            --card-bg: #fff;
+            --border: #e3e6ed;
+            --text-main: #212529;
+            --text-secondary: #636e72;
+            --shadow: 0 6px 24px 0 rgba(80, 102, 144, 0.12);
+            --radius: 14px;
+            --input-bg: #f7f8fa;
+        }
+
+        html, body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 32px auto;
+            padding: 24px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.12rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.13s;
+        }
+
+            .btn:hover, .btn:focus {
+                background: var(--primary-dark);
+                box-shadow: 0 4px 16px rgba(108, 92, 231, 0.16);
+                transform: translateY(-2px) scale(1.03);
+            }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+            .btn-secondary:hover, .btn-secondary:focus {
+                background: #019875;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+            .btn-danger:hover, .btn-danger:focus {
+                background: #b71c1c;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: #212529;
+        }
+
+            .btn-warning:hover, .btn-warning:focus {
+                background: #ffeaa7;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        th, td {
+            padding: 18px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: #f6f9fd;
+        }
+
+        tr:hover td {
+            background: #f0f4ff !important;
+            transition: background 0.2s;
+        }
+
+        .points-display {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 1.18rem;
+        }
+
+        select, .note {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 7px 11px;
+            font-size: 1rem;
+            color: var(--text-main);
+            margin: 2px 0;
+            width: 90%;
+        }
+
+        .note {
+            font-size: .96rem;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .action-cell {
+            min-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .message {
+            margin: 22px 0 6px 0;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            background: #e8f6ef;
+            color: var(--secondary);
+            box-shadow: 0 2px 10px 0 rgba(46, 204, 113, 0.04);
+        }
+
+            .message.success {
+                background: #e8f6ef;
+                color: var(--secondary);
+                border: 1px solid #b2f6e2;
+            }
+
+            .message.error {
+                background: #ffeaea;
+                color: var(--danger);
+                border: 1px solid #ffbdbd;
+            }
+
+            .message.warning {
+                background: #fff9e5;
+                color: var(--warning);
+                border: 1px solid #ffe49e;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(52, 73, 94, 0.16);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 38px 30px 28px 30px;
+            border-radius: 18px;
+            max-width: 390px;
+            width: 92vw;
+            box-shadow: 0 8px 40px rgba(35, 41, 73, 0.16);
+            text-align: center;
+        }
+
+        .modal h2 {
+            margin-bottom: 16px;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 4vw 2vw;
+            }
+
+            .action-cell {
+                min-width: 220px;
+                font-size: 0.96rem;
+            }
+
+            th, td {
+                padding: 10px 5px;
+                font-size: 0.96rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            table {
+                font-size: 0.92rem;
+            }
+
+            .modal-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>班级积分系统</h1>
+            <div class="subtitle">记录和追踪学生课堂表现与积分</div>
+        </header>
+
+        <div class="controls">
+            <button class="btn" onclick="sortByPersonalPoints()">个人积分排行榜</button>
+            <button class="btn" onclick="sortByGroupPoints()">小组积分排行榜</button>
+            <button class="btn btn-warning" onclick="refreshData()">刷新数据</button>
+            <button class="btn btn-secondary" onclick="downloadData()">下载当日数据</button>
+            <button class="btn btn-secondary" onclick="saveToServer()">保存到服务器</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">小组</th>
+                    <th width="10%">学号</th>
+                    <th width="15%">姓名</th>
+                    <th width="10%">积分</th>
+                    <th width="35%">操作</th>
+                    <th width="22%">备注</th>
+                </tr>
+            </thead>
+            <tbody id="studentList">
+                <!-- 动态生成学生信息 -->
+            </tbody>
+        </table>
+
+        <div id="message" class="message" style="display:none"></div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>确认操作</h2>
+            <p id="modalMessage">您确定要执行此操作吗？</p>
+            <div class="modal-buttons">
+                <button class="btn btn-warning" onclick="closeModal()">取消</button>
+                <button class="btn btn-danger" id="confirmAction">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const studentGroups = [
+            {
+                group: 1,
+                students: [
+                    { id: 5, name: '邓俊杰' },
+                    { id: 12, name: '陆启铭' },
+                    { id: 35, name: '黎钧浠' },
+                    { id: 31, name: '方晓彤' },
+                    { id: 8, name: '黎俊僖' },
+                    { id: 36, name: '罗毓贝' }
+                ]
+            },
+            {
+                group: 2,
+                students: [
+                    { id: 4, name: '邓焯曦' },
+                    { id: 17, name: '潘嘉谦' },
+                    { id: 11, name: '刘浩文' },
+                    { id: 47, name: '张逸嫣' },
+                    { id: 7, name: '关钧与' },
+                    { id: 2, name: '陈家福' }
+                ]
+            },
+            {
+                group: 3,
+                students: [
+                    { id: 16, name: '马浩钒' },
+                    { id: 33, name: '侯羽璇' },
+                    { id: 13, name: '陆子文' },
+                    { id: 9, name: '李奕鸿' },
+                    { id: 26, name: '杨睿泓' },
+                    { id: 30, name: '陈梓渝' }
+                ]
+            },
+            {
+                group: 4,
+                students: [
+                    { id: 49, name: '周欣愉' },
+                    { id: 34, name: '黎霏' },
+                    { id: 29, name: '蔡昕沄' },
+                    { id: 32, name: '关乐彤' },
+                    { id: 44, name: '许瑞欣' },
+                    { id: 20, name: '司徒仲言' }
+                ]
+            },
+            {
+                group: 5,
+                students: [
+                    { id: 38, name: '阮惠盈' },
+                    { id: 23, name: '佟尔悦' },
+                    { id: 24, name: '王遂立' },
+                    { id: 45, name: '杨善甜' },
+                    { id: 39, name: '沈懿敏' },
+                    { id: 1, name: '毕隽熙' }
+                ]
+            },
+            {
+                group: 6,
+                students: [
+                    { id: 41, name: '谢卓霖' },
+                    { id: 3, name: '陈昱朗' },
+                    { id: 28, name: '张杰齐' },
+                    { id: 14, name: '罗崇峻' },
+                    { id: 42, name: '谢姕澄' },
+                    { id: 21, name: '孙逸凡' },
+                    { id: 18, name: '秦柏霖' }
+                ]
+            },
+            {
+                group: 7,
+                students: [
+                    { id: 27, name: '张汉典' },
+                    { id: 10, name: '林哲瀚' },
+                    { id: 40, name: '肖咏诗' },
+                    { id: 48, name: '钟悦乔' },
+                    { id: 50, name: '朱琳晞' },
+                    { id: 22, name: '佟尔颜' }
+                ]
+            },
+            {
+                group: 8,
+                students: [
+                    { id: 37, name: '潘思韵' },
+                    { id: 19, name: '邵烨俊' },
+                    { id: 46, name: '杨子昕' },
+                    { id: 6, name: '高朗轩' },
+                    { id: 43, name: '徐博斯' },
+                    { id: 15, name: '罗迪轩' },
+                    { id: 25, name: '徐浩尧' },
+                    { id: 51, name: '罗志浩' },
+                ]
+            }
+        ];
+
+        // 初始化学生数据
+        let students = [];
+        function initStudents() {
+            students = [];
+            studentGroups.forEach(group => {
+                group.students.forEach(student => {
+                    students.push({
+                        group: group.group,
+                        id: student.id,
+                        name: student.name,
+                        points: 0,
+                        notes: []
+                    });
+                });
+            });
+        }
+        initStudents();
+
+        const subjects = [
+            "语文", "数学", "英语", "道法", "历史", "政治", "生物", "地理",
+            "音乐", "体育", "美术", "电脑", "物理", "自习", "心理"
+        ];
+
+        const addReasons = [
+            ...subjects.map(subject => `${subject}课堂表现良好`),
+            ...subjects.map(subject => `交齐${subject}作业`)
+        ];
+
+        const minusReasons = [
+            ...subjects.map(subject => `${subject}纪律问题`),
+            "未7:25之前到班", "午休未按时回班",
+            ...subjects.map(subject => `未交${subject}作业`),
+            "卫生问题", "仪容仪表问题", "午休纪律问题", "午休座椅未整理", "午休迟到", "动电脑", "眼保健操纪律问题"
+        ];
+
+        // 渲染学生列表
+        function renderStudents(sortKey = 'id') {
+            // 默认按学号排序
+            students.sort((a, b) => {
+                if (sortKey === 'id') return a.id - b.id;
+                if (sortKey === 'points') return b.points - a.points;
+                return 0;
+            });
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                            <td>${student.group || '无'}</td>
+                            <td>${student.id}</td>
+                            <td>${student.name}</td>
+                            <td class="points-display" id="points-${student.id}">${student.points}</td>
+                            <td class="action-cell">
+                                <select id="addReason-${student.id}">
+                                    ${addReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                                </select>
+                                <button class="btn btn-secondary" onclick="addPoints(${student.id})">加分</button>
+                                <select id="minusReason-${student.id}">
+                                    ${minusReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                                </select>
+                                <button class="btn btn-warning" onclick="minusPoints(${student.id})">减分</button>
+                                <button class="btn btn-danger" onclick="confirmClearAll(${student.id})">清空</button>
+                            </td>
+                            <td class="note" id="note-${student.id}">${student.notes.join('<br>')}</td>
+                        `;
+                studentList.appendChild(row);
+            });
+        }
+
+        // 加分函数
+        function addPoints(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const reason = document.getElementById(`addReason-${id}`).value;
+                student.points++;
+                student.notes.push(`+1 分：${reason} (${new Date().toLocaleTimeString()})`);
+                // 渲染分数和备注
+                const pointsCell = document.getElementById(`points-${id}`);
+                const noteCell = document.getElementById(`note-${id}`);
+                if (pointsCell) pointsCell.textContent = student.points;
+                if (noteCell) noteCell.innerHTML = student.notes.join('<br>');
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 加 1 分：${reason}`, 'success');
+            }
+        }
+
+        // 减分函数
+        function minusPoints(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const reason = document.getElementById(`minusReason-${id}`).value;
+                student.points--;
+                student.notes.push(`-1 分：${reason} (${new Date().toLocaleTimeString()})`);
+                // 渲染分数和备注
+                const pointsCell = document.getElementById(`points-${id}`);
+                const noteCell = document.getElementById(`note-${id}`);
+                if (pointsCell) pointsCell.textContent = student.points;
+                if (noteCell) noteCell.innerHTML = student.notes.join('<br>');
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 减 1 分：${reason}`, 'warning');
+            }
+        }
+
+        // 确认清空对话框
+        function confirmClearAll(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const modal = document.getElementById('confirmModal');
+                const modalMessage = document.getElementById('modalMessage');
+                const confirmButton = document.getElementById('confirmAction');
+
+                modalMessage.textContent = `您确定要清空 ${student.name} 的积分和备注吗？`;
+                confirmButton.onclick = function () {
+                    clearAll(id);
+                    closeModal();
+                };
+
+                modal.style.display = 'flex';
+            }
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        // 清空个人积分、小组积分关联和备注的函数
+        function clearAll(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                student.points = 0;
+                student.notes = [];
+                const pointsCell = document.getElementById(`points-${id}`);
+                const noteCell = document.getElementById(`note-${id}`);
+                if (pointsCell) pointsCell.textContent = 0;
+                if (noteCell) noteCell.innerHTML = '';
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 的积分和备注已清空`, 'success');
+            }
+        }
+
+        // 按个人积分排序
+        function sortByPersonalPoints() {
+            renderStudents('points');
+            showMessage('已按个人积分从高到低排序', 'success');
+        }
+
+        // 按小组积分排序
+        function sortByGroupPoints() {
+            const groupScores = {};
+            students.forEach(student => {
+                const group = student.group;
+                if (group !== undefined && !isNaN(group)) {
+                    if (!groupScores[group]) {
+                        groupScores[group] = 0;
+                    }
+                    groupScores[group] += student.points;
+                }
+            });
+
+            const groupScoreArray = Object.entries(groupScores).map(([group, score]) => ({ group: parseInt(group), score }));
+            groupScoreArray.sort((a, b) => b.score - a.score);
+
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            groupScoreArray.forEach(groupInfo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                            <td colspan="2" style="font-weight:600;color:var(--primary)">雁队 ${groupInfo.group}</td>
+                            <td colspan="2" style="font-weight:600;color:var(--secondary)">小组积分 ${groupInfo.score}</td>
+                            <td colspan="2"></td>
+                        `;
+                studentList.appendChild(row);
+            });
+
+            showMessage('已按小组积分从高到低排序', 'success');
+        }
+
+        // 保存数据到本地存储
+        function saveDataToLocalStorage() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // 从本地存储加载数据
+        function loadDataFromLocalStorage() {
+            const storedData = localStorage.getItem('students');
+            if (storedData) {
+                const parsedData = JSON.parse(storedData);
+                // 检查加载的数据中小组信息是否正确
+                parsedData.forEach(student => {
+                    if (student.group === undefined) {
+                        const matchingGroup = studentGroups.find(g => g.students.some(s => s.id === student.id));
+                        if (matchingGroup) {
+                            student.group = matchingGroup.group;
+                        }
+                    }
+                });
+                students = parsedData;
+            }
+        }
+
+        // 显示提示信息
+        function showMessage(msg, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = "";
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = 'message';
+                messageDiv.style.display = "none";
+            }, 3000);
+        }
+
+        // 刷新函数
+        function refreshData() {
+            if (confirm('确定要刷新数据吗？这将重置所有积分和备注。')) {
+                initStudents();
+                saveDataToLocalStorage();
+                renderStudents('id');
+                showMessage('数据已刷新，积分和备注已重置', 'success');
+            }
+        }
+
+        // 下载数据函数
+        function downloadData() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const fileName = `${year}-${month}-${day}-班级积分数据.csv`;
+
+            let csvContent = "sep=,\n";
+            csvContent += "小组,学号,姓名,积分,备注\n";
+            students.forEach(student => {
+                csvContent += `"${student.group}","${student.id}","${student.name}","${student.points}","${student.notes.join(';')}"\n`;
+            });
+
+            // 添加小组积分榜数据
+            const groupScores = {};
+            students.forEach(student => {
+                const group = student.group;
+                if (group !== undefined && !isNaN(group)) {
+                    if (!groupScores[group]) {
+                        groupScores[group] = 0;
+                    }
+                    groupScores[group] += student.points;
+                }
+            });
+            const groupScoreArray = Object.entries(groupScores).map(([group, score]) => ({ group: parseInt(group), score }));
+            groupScoreArray.sort((a, b) => b.score - a.score);
+
+            csvContent += "\n小组积分榜\n";
+            csvContent += "小组,小组积分\n";
+            groupScoreArray.forEach(groupInfo => {
+                csvContent += `雁队 ${groupInfo.group},${groupInfo.score}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            if (window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveBlob(blob, fileName);
+            } else {
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            showMessage('数据已下载', 'success');
+        }
+
+        // 保存数据到服务器
+        function saveToServer() {
+            showMessage('正在保存数据到服务器...', 'warning');
+
+            // 准备要发送的数据
+            const dataToSend = {
+                timestamp: new Date().toISOString(),
+                students: students,
+                groupScores: calculateGroupScores()
+            };
+
+            fetch('score-api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend)
+            })
+                .then(async response => {
+                    if (!response.ok) {
+                        throw new Error('服务器响应错误: ' + response.status);
+                    }
+                    const text = await response.text();
+                    if (!text) {
+                        throw new Error('服务器未返回任何内容');
+                    }
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('服务器返回格式错误: ' + e.message + ' 内容: ' + text);
+                    }
+                    return data;
+                })
+                .then(data => {
+                    if (data.success) {
+                        showMessage('数据成功保存到服务器！时间: ' + data.timestamp, 'success');
+                    } else {
+                        showMessage('保存到服务器失败: ' + (data.message || '未知错误'), 'error');
+                    }
+                })
+                .catch((error) => {
+                    console.error('错误:', error);
+                    showMessage('保存到服务器失败: ' + error.message, 'error');
+                });
+        }
+
+        // 计算小组积分
+        function calculateGroupScores() {
+            const groupScores = {};
+            students.forEach(student => {
+                const group = student.group;
+                if (group !== undefined && !isNaN(group)) {
+                    if (!groupScores[group]) {
+                        groupScores[group] = 0;
+                    }
+                    groupScores[group] += student.points;
+                }
+            });
+            return groupScores;
+        }
+
+        // 页面加载时加载数据并渲染
+        window.onload = function () {
+            loadDataFromLocalStorage();
+            renderStudents('id');
+        };
+    </script>
+</body>
+</html>
