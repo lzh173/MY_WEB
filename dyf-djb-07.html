@@ -291,11 +291,12 @@
 
         <div class="controls">
             <button class="btn" onclick="sortByPersonalPoints()">个人积分排行榜</button>
-            <button class="btn" onclick="sortByGroupPoints()">小组积分排行榜</button>
             <button class="btn btn-warning" onclick="refreshData()">刷新数据</button>
             <button class="btn btn-secondary" onclick="downloadData()">下载当日数据</button>
             <button class="btn btn-secondary" onclick="saveToServer()">保存到服务器</button>
+            <button class="btn btn-success" onclick="addPointsAll()">全班加分</button>
         </div>
+
 
         <table>
             <thead>
@@ -489,6 +490,29 @@
                         `;
                 studentList.appendChild(row);
             });
+        }
+
+        // 全班加分
+        function addPointsAll() {
+            const reason = prompt("请输入全班加分理由，例如：全班表现良好");
+            if (!reason) {
+                showMessage("未输入理由，未加分", "warning");
+                return;
+            }
+            // 全班每人加一分
+            students.forEach(student => {
+                student.points++;
+                student.notes.push(`+1 分：${reason} (${new Date().toLocaleTimeString()})`);
+            });
+            saveDataToLocalStorage();
+            renderStudents('id');
+            showMessage("全班加 1 分：" + reason, "success");
+        }
+
+        // 按学号排序
+        function sortByPersonalPoints() {
+            renderStudents('id');
+            showMessage('已按学号排序', 'success');
         }
 
         // 加分函数
